@@ -39,6 +39,7 @@
 3412143070 01 国家地理资源 National Geographic Resources 2 任选 95.0
 3812130010 118 体育专项(上) Specialized Physical Education Ⅰ 1 必修 85.0
 1052100040 03 形势与政策4 Situation and Policies IV 0.4 必修 90.0
+3132111021 01 编译原理与技术 3 必修 89.0
 3132113120 01 计算机组成与系统结构 The Computer Organization and Architecture 5 必修 85.0
 3162100230 01 电影欣赏 Movie Enjoy 2 任选 84.0
 3182102190 1 网络安全实验 Network Security Experiment 1 必修 86.0
