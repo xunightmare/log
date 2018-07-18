@@ -13,20 +13,6 @@ start=time.clock()
 reload(sys)
 sys.setdefaultencoding('utf-8') 
 
-
-#对图片进行切割处理
-def segment(im):
-    im_new=[]
-    im1=im.crop((5,0,5+37,40))
-    im_new.append(im1)
-    im2=im.crop((40,0,40+37,40))
-    im_new.append(im2)
-    im3=im.crop((77,0,77+37.5,40))
-    im_new.append(im3)
-    im4=im.crop((114,0,114+37,40))
-    im_new.append(im4)
-    return im_new
-
 #对图片进行二值化处理,threshold表示阈值
 def binarizing(im,threshold):
     pixdata=im.load()
@@ -76,6 +62,8 @@ def imgdeal(im):
 def recognition(im):
     code = pytesseract.image_to_string(im)
     return code
+
+
 
 #实现自动打码登录并爬取信息    
 def login():
@@ -195,6 +183,8 @@ def login():
                     temp1 = float(re.match("[0-9]+.[0-9]",a[13]).group())
                     credit+=float(a[9])
                     summary+=float(a[9])*temp1
+                else:
+                    print(a[11])
             print("加权平均分")
             print(summary/credit)
             resfile.close()     
@@ -207,4 +197,19 @@ if __name__ == "__main__":
     login()
     end=time.clock()
 #    print('耗费时间为%d'%(end-start))
+
+
+#对图片进行切割处理
+def segment(im):
+    im_new=[]
+    im0=im.crop((5,0,5+37,40))
+    im_new.append(im0)
+    im1=im.crop((40,0,40+37,40))
+    im_new.append(im1)
+    im2=im.crop((77,0,77+37.5,40))
+    im_new.append(im2)
+    im3=im.crop((114,0,114+37,40))
+    im_new.append(im3)
+    return im_new
+
 
