@@ -157,48 +157,54 @@ def login():
         info = r'<td align="center">\s*?(\S.*?)\s*?</td>\s*?'*6
         pattern = re.compile(info)
         info_result = pattern.findall(e.text)
-        if(len(info_result)<1):#根据爬取信息的长度来判断是否成功登录校园网	
-	    fail=fail+1;       #fail用来记录失败的次数
+        if(len(info_result)<1):#根据爬取信息的长度来判断是否成功登录校园网  
+            fail=fail+1;       #fail用来记录失败的次数
             session.close()
         else:
             filename = r"grades.txt"
             gradesfile = open(filename, "w+")
-	    gradesfile.write(e.content)
+            gradesfile.write(e.content)
             gradesfile.close()
-	    alist = list()
+            alist = list()
             success=success+1; #success用来记录成功的次数
-	    soup = BeautifulSoup(open(filename))
-	    filename2 = "result.txt"
-	    resfile = open(filename2,"w+")
-	    p = re.compile('<[^>]+>')
-	    for tag in soup.find_all("tr", "odd"):
-		str1 = tag.get_text()
-		result = ' '.join(str1.split())
-		result = result + '\r\n'
-#		blist = list()
-#		for astring in tag.contents:
-	#	    print(astring)
-#		    s = p.sub("",str(astring))
-#		    s = ' '.join(s.split())
-#		    blist.append(astring)
-	#	result = tag.contents
-	       # print(blist)
-		resfile.write(result)
-	#	alist.append(blist)
-		alist.append(str1.split())
-	    credit = 0
-	    summary = 0
-	    for a in alist:
-		print(a)
-		print("----------------------------------------")
-  	    resfile.close()		
-	    break
+            soup = BeautifulSoup(open(filename))
+            filename2 = "result.txt"
+            resfile = open(filename2,"w+")
+            p = re.compile('<[^>]+>')
+            for tag in soup.find_all("tr", "odd"):
+                blist = list()
+                for astring in tag.contents:
+                    s = p.sub("", str(astring))
+                    s = ' '.join(s.split())
+                    blist.append(s) 
+                    print(s)
+                    resfile.write(s)
+#                    print("----------------------------")
+                print("*****************************************")
+#                print(blist)
+                alist.append(blist)
+    #   result = tag.contents
+           # print(blist)
+#           resfile.write(result)
+#           alist.append(str1.split())
+            credit = 0
+            summary = 0
+            for a in alist:
+#              print(a[9],a[13])
+                if a[11] != '\xe4\xbb\xbb\xe9\x80\x89':
+                    temp1 = float(re.match("[0-9]+.[0-9]",a[13]).group())
+                    credit+=float(a[9])
+                    summary+=float(a[9])*temp1
+            print("加权平均分")
+            print(summary/credit)
+            resfile.close()     
+            break
         n=n-1;           
-    print('成功次数为%d'%success)
-    print('fail次数为%d'%fail)
+#        print('成功次数为%d'%success)
+#        print('fail次数为%d'%fail)
 
 if __name__ == "__main__": 
     login()
     end=time.clock()
-    print('耗费时间为%d'%(end-start))
+#    print('耗费时间为%d'%(end-start))
 
