@@ -41,7 +41,7 @@ def denoising(im):
             if pixdata[i,j+1]>245:
                 count=count+1
             if pixdata[i+1,j]>245:
-                count=count+1
+                count=count+1  
             if pixdata[i-1,j]>245:
                 count=count+1
             if count>2:
@@ -153,40 +153,46 @@ def login():
             gradesfile = open(filename, "w+")
             gradesfile.write(e.content)
             gradesfile.close()
-            alist = list()
+            clist = list()
             success=success+1; #success用来记录成功的次数
             soup = BeautifulSoup(open(filename))
             filename2 = "result.txt"
             resfile = open(filename2,"w+")
-            p = re.compile('<[^>]+>')
-            for tag in soup.find_all("tr", "odd"):
-                blist = list()
-                for astring in tag.contents:
-                    s = p.sub("", str(astring))
-                    s = ' '.join(s.split())
-                    blist.append(s) 
-                    print(s)
-                    resfile.write(s)
-#                    print("----------------------------")
-                print("*****************************************")
-#                print(blist)
-                alist.append(blist)
+            p = re.compile('<[^>]+>')   # 这个表达式用来删除所有的html标签
+            for table in soup.find_all("table", "displayTag"):  # 每个学期的成绩存放在一个表格里面，将每个表格存入循环变量table中
+                alist = list()
+                for tag in table.find_all("tr", "odd"): # 每个表格中的一个tr标签存放了一门成绩，用tag遍历没一门成绩
+                    blist = list()
+                    for astring in tag.contents: # 每一门成绩中有课程名，课程号等信息，遍历这些信息，去掉空格，存入blist中
+                        s = p.sub("", str(astring))
+                        s = ' '.join(s.split())
+                        blist.append(s) 
+#                        print(s)
+                        resfile.write(s)
+                    alist.append(blist)
+                print("------------------------------------------------------")
+                for a in alist:
+                    print(a)
+                clist.append(alist)
     #   result = tag.contents
            # print(blist)
 #           resfile.write(result)
 #           alist.append(str1.split())
-            credit = 0
-            summary = 0
-            for a in alist:
-#              print(a[9],a[13])
-                if a[11] != '\xe4\xbb\xbb\xe9\x80\x89':
-                    temp1 = float(re.match("[0-9]+.[0-9]",a[13]).group())
-                    credit+=float(a[9])
-                    summary+=float(a[9])*temp1
-                else:
-                    print(a[11])
-            print("加权平均分")
-            print(summary/credit)
+            i=0
+            for x in clist:
+                credit = 0
+                summary = 0
+                for a in clist[i]:
+#                   print(a[9],a[13])
+                    if a[11] != '\xe4\xbb\xbb\xe9\x80\x89': # 如果不是任选课，就参加计算，因为校任选课不参与总成绩的计算
+                        temp1 = float(re.match("[0-9]+.[0-9]",a[13]).group())
+                        credit+=float(a[9])
+                        summary+=float(a[9])*temp1
+                    else:
+                        print(a[11])
+                i = i + 1
+                print("加权平均分%d"%i)
+                print(summary/credit)
             resfile.close()     
             break
         n=n-1;           
